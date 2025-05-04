@@ -78,5 +78,42 @@ plt.title("Detected Circles")
 plt.axis("off")
 plt.show()
 
+Projeto 3: Detecção de folhas danificadas.
 
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 
+img = cv2.imread(r"C:\Users\Aaron\Downloads\AV2_IMAGENS\AV2_IMAGENS\projeto_3\img_folha_3.JPG")
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+lower_green = np.array([35, 40, 40])
+upper_green = np.array([85, 255, 255])
+
+lower_brown = np.array([10, 100, 20])
+upper_brown = np.array([20, 255, 200])
+
+green_mask = cv2.inRange(hsv, lower_green, upper_green)
+brown_mask = cv2.inRange(hsv, lower_brown, upper_brown)
+
+green_part = cv2.bitwise_and(img, img, mask=green_mask)
+brown_part = cv2.bitwise_and(img, img, mask=brown_mask)
+
+def show_img(title, img):
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    plt.imshow(img_rgb)
+    plt.title(title)
+    plt.axis("off")
+    plt.show()
+
+show_img("Green Areas", green_part)
+show_img("Brown Areas", brown_part)
+
+non_green_mask = cv2.bitwise_not(green_mask)
+damaged_parts = cv2.bitwise_and(img, img, mask=non_green_mask)
+damaged_rgb = cv2.cvtColor(damaged_parts, cv2.COLOR_BGR2RGB)
+
+plt.imshow(damaged_rgb) 
+plt.title("Damaged / Non-Green Areas")
+plt.axis("off")
+plt.show()
